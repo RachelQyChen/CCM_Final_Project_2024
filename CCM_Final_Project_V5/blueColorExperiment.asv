@@ -1,0 +1,48 @@
+
+function blueColorExperiment()
+    subjectInitials = input('Enter your initials: ', 's');%evalin('base', 'subjectInitials');
+    finalGVarName = [subjectInitials '_finalG'];
+    % Folder to save images
+    folderName = [subjectInitials '_BlueColorImages'];
+    if ~exist(folderName, 'dir')
+        mkdir(folderName);  % Create the folder if it does not exist
+    end
+
+    G_values = linspace(14, 254, 25);
+    R = 38/255;
+    B = 203/255;
+    
+    G_sequence = 1:length(G_values);
+    G_sequence = randperm(length(G_sequence));
+    G_save = nan(size(G_sequence));
+    
+ 
+    % Initialize response array
+    responses = zeros(1, length(G_values));
+    responses = zeros(1, length(G_values));
+    
+    % Loop generation and save figures
+    for ii = 1:length(G_values)
+        % Create figures
+        figure;
+        G = G_values(G_sequence(ii))/255;
+        G_save(ii) = G_values(G_sequence(ii));
+        color = [R, G, B]; % RGB values
+        patch([0 1 1 0], [0 0 1 1], color);
+        axis off; 
+        title(sprintf('Color Brick%d', ii));
+        
+        % Prompt user to judge if the color is blue
+        response = input('Is this color blue? Enter 1 for Yes, 2 for No: ');
+        responses(ii) = response;
+        
+        % Save image to local files within the specified folder
+        filename = sprintf('%s/color brick%d.png', folderName, ii);
+        saveas(gcf, filename);
+        close; 
+    end
+    
+    % Save final values and responses to a .mat file
+    save([folderName '/' subjectInitials '_data.mat'], 'G_save', 'responses');
+    fprintf('All images and responses saved in %s, ready to go!\n', folderName);
+end
